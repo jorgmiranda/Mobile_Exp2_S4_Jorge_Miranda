@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "492709063374",
+    "project_id": "formativa7android",
+    "storage_bucket": "formativa7android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492709063374:android:28942ed4b983d00ecebe9f",
+        "android_client_info": {
+          "package_name": "com.example.exp2_s3_jorge_miranda"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzgxQJZGWXb8zkZbKcrgeS7So-_M1Cx8M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

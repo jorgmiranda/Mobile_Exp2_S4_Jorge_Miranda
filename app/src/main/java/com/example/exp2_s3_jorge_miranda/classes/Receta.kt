@@ -1,6 +1,7 @@
 package com.example.exp2_s3_jorge_miranda.classes
 
 class Receta(
+    val id: String? = null,
     val nombre: String,
     val ingredientes: String,
     val imagen: String

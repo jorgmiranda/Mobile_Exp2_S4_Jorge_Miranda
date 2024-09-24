@@ -13,24 +13,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.exp2_s3_jorge_miranda.activity.ui.theme.Exp2_S3_Jorge_MirandaTheme
 import com.example.exp2_s3_jorge_miranda.classes.Usuario
-import com.example.exp2_s3_jorge_miranda.screen.HomeScreen
+import com.example.exp2_s3_jorge_miranda.screen.DetallesUsuarioScreen
 
-class HomeActivity : ComponentActivity() {
+class DetalleUsuarioActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             val usuario = intent.getSerializableExtra("usuario") as? Usuario
-            HomeScreen(usuario)
+            DetallesUsuarioScreen(usuario)
         }
     }
 }
 
 
-
 @Preview(showBackground = true)
 @Composable
-fun VistaPreviaHome() {
+fun GreetingPreview3() {
     val usuario: Usuario? = null
-    HomeScreen(usuario)
+    DetallesUsuarioScreen(usuario)
 }

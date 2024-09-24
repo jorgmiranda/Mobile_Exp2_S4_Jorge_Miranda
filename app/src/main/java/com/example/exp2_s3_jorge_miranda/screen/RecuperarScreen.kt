@@ -1,6 +1,7 @@
 package com.example.exp2_s3_jorge_miranda.screen
 
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import com.example.exp2_s3_jorge_miranda.activity.HomeActivity
 import com.example.exp2_s3_jorge_miranda.activity.MainActivity
 import com.example.exp2_s3_jorge_miranda.classes.PreferencesManager
 import com.example.exp2_s3_jorge_miranda.classes.Usuario
+import com.example.exp2_s3_jorge_miranda.repository.FirebaseService
 
 @Composable
 fun RecuperarScreen(){
@@ -49,7 +51,9 @@ fun RecuperarScreen(){
 
     val context = LocalContext.current;
     //Se instancia sharedPreferences
-    val preferencesManager = PreferencesManager(context);
+    //val preferencesManager = PreferencesManager(context);
+    // se instancia firebase
+    val firestoreService = FirebaseService<Usuario>()
 
     Column(
         modifier = Modifier
@@ -69,13 +73,22 @@ fun RecuperarScreen(){
         Spacer(modifier = Modifier.height(10.dp))
 
         Button(onClick = {
-            val recuperarUsuario = preferencesManager.getObject("usuario_"+email, Usuario::class.java)
-            if(recuperarUsuario != null){
-                Toast.makeText(context, recuperarUsuario.verContrasena(), Toast.LENGTH_SHORT).show()
+            var usuarioEncontado: Usuario? = null
+           firestoreService.obtenerDocumentos("usuarios", Usuario::class,{ usuarios ->
+               usuarioEncontado = usuarios.filter { it.correo.equals(email) }.firstOrNull()
+               Log.w("Firestore", "Se recorrre el arreglo "+ usuarioEncontado?.correo)
+               if(usuarioEncontado != null){
+                   Toast.makeText(context, usuarioEncontado?.verContrasena(), Toast.LENGTH_SHORT).show()
 
-            }else{
-                Toast.makeText(context, "El usuario no existe!", Toast.LENGTH_LONG).show()
-            }
+               }else{
+                   Toast.makeText(context, "El usuario no existe!", Toast.LENGTH_LONG).show()
+               }
+           }, { error ->
+               Log.w("Firestore", "Error al verificar el correo", error)
+           })
+
+            //val recuperarUsuario = preferencesManager.getObject("usuario_"+email, Usuario::class.java)
+
         },
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier.width(280.dp),

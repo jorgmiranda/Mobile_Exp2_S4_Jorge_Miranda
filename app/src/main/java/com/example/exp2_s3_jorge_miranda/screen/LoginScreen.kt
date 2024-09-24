@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,6 +45,7 @@ import com.example.exp2_s3_jorge_miranda.activity.RecuperarActivity
 import com.example.exp2_s3_jorge_miranda.activity.RegistroActivity
 import com.example.exp2_s3_jorge_miranda.classes.PreferencesManager
 import com.example.exp2_s3_jorge_miranda.classes.Usuario
+import com.example.exp2_s3_jorge_miranda.repository.FirebaseService
 
 @Composable
 fun LoginScreen(){
@@ -54,7 +56,14 @@ fun LoginScreen(){
 
     val context = LocalContext.current;
     //Se instancia sharedPreferences
-    val preferencesManager = PreferencesManager(context);
+    //val preferencesManager = PreferencesManager(context);
+    //Se instancia firebase
+    val firestoreService = if (!LocalInspectionMode.current) {
+        FirebaseService<Usuario>()
+    } else {
+        null // se comenta para ver si arregla la vista previa
+    }
+
 
     //Variaables que almacenan valores y validan errores
     var email by remember { mutableStateOf("") }
@@ -125,8 +134,23 @@ fun LoginScreen(){
             passwordError = password.isEmpty()
 
             if (!emailError && !passwordError) {
-               val recuperarUsuario = preferencesManager.getObject("usuario_"+email, Usuario::class.java)
+               //val recuperarUsuario = preferencesManager.getObject("usuario_"+email, Usuario::class.java)
+                firestoreService?.login(email, password, { usuario ->
+                    if (usuario != null) {
+                        Toast.makeText(context, "Login exitoso", Toast.LENGTH_SHORT).show()
+                        // Navegar a la siguiente pantalla y pasar el usuario
 
+                        val intent = Intent(context, HomeActivity::class.java).apply {
+                            putExtra("usuario", usuario)
+                        }
+                        context.startActivity(intent)
+                    } else {
+                        Toast.makeText(context, "Credenciales incorrectas", Toast.LENGTH_SHORT).show()
+                    }
+                }, { error ->
+                    Toast.makeText(context, "Error al iniciar sesión: ${error.message}", Toast.LENGTH_SHORT).show()
+                })
+                /*
                 if(recuperarUsuario != null){
                     Toast.makeText(context, "Credenciales Validas!", Toast.LENGTH_SHORT).show()
                     val navigate = Intent(context, HomeActivity::class.java)
@@ -136,6 +160,8 @@ fun LoginScreen(){
                 }else{
                     Toast.makeText(context, "Credenciales Invalidas", Toast.LENGTH_LONG).show()
                 }
+                */
+
             }
 
         },

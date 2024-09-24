@@ -1,5 +1,6 @@
 package com.example.exp2_s3_jorge_miranda.screen
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,12 +31,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.exp2_s3_jorge_miranda.R
+import com.example.exp2_s3_jorge_miranda.activity.DetalleUsuarioActivity
+import com.example.exp2_s3_jorge_miranda.activity.HomeActivity
 import com.example.exp2_s3_jorge_miranda.classes.PreferencesManager
 import com.example.exp2_s3_jorge_miranda.classes.Receta
 import com.example.exp2_s3_jorge_miranda.classes.Usuario
 
 @Composable
-fun HomeScreen(correoUsuario:String){
+fun HomeScreen(usuario:Usuario?){
     val gradientColors = listOf(
         Color(0xFFFFFFFF),
         Color(0xFF00BCD4)
@@ -44,7 +47,7 @@ fun HomeScreen(correoUsuario:String){
     val context = LocalContext.current
     val preferencesManager = PreferencesManager(context)
 
-    val usuario = preferencesManager.getObject("usuario_"+correoUsuario, Usuario::class.java)
+   // val usuario = preferencesManager.getObject("usuario_"+correoUsuario, Usuario::class.java)
 
     Column (
         modifier = Modifier
@@ -61,7 +64,13 @@ fun HomeScreen(correoUsuario:String){
                 .padding(20.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             shape = RoundedCornerShape(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF0C6E7A), contentColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF0C6E7A), contentColor = Color.White),
+            onClick = {
+                val intent = Intent(context, DetalleUsuarioActivity::class.java).apply {
+                    putExtra("usuario", usuario)
+                }
+                context.startActivity(intent)
+            }
         ) {
             Row (
                 modifier = Modifier
@@ -157,5 +166,6 @@ fun HomeScreen(correoUsuario:String){
 @Preview
 @Composable
 fun VistaPreviaHome(){
-    HomeScreen("")
+    var usuario: Usuario? = null
+    HomeScreen(usuario)
 }
